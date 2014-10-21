@@ -1,0 +1,38 @@
+from intro_to_flask import app
+from flask import Flask, render_template, request, flash, redirect
+from forms import ContactForm
+ 
+app = Flask(__name__)
+ 
+app.secret_key = 'bllksdjflskjdflskdjf'
+
+@app.route('/')
+def home():
+  return render_template('home.html')
+ 
+@app.route('auth')
+def auth():
+  return redirect("http://www.google.ch", code=302)
+
+@app.route('/about')
+def about():
+  return render_template('about.html')
+
+@app.route('/contact', methods= ['GET', 'POST'])
+def contact():
+   form = ContactForm()
+
+   if request.method == 'POST':
+	if form.validate() == False:
+	   	flash('All fields are required.')
+	   	return render_template('contact.html', form=form)
+	else:
+	   	return 'Form posted.'
+
+   elif request.method == 'GET':
+	return render_template('contact.html', form = form)
+
+   return render_template('contact.html', form = form)
+
+if __name__ == '__main__':
+  app.run(debug=True)
